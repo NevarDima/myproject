@@ -28,7 +28,7 @@ public class DefaultUserService implements UserService {
 
     @Override
     public List<User> getUser() {
-        return userDao.getStudents();
+        return userDao.getUsers();
     }
 
     @Override

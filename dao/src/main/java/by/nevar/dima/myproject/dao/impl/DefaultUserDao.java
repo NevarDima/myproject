@@ -29,7 +29,7 @@ public class DefaultUserDao implements UserDao {
     private List<User> users;
 
     @Override
-    public List<User> getStudents() {
+    public List<User> getUsers() {
         return users;
     }
 
