@@ -6,6 +6,7 @@ import by.nevar.dima.myproject.model.AuthUser;
 import by.nevar.dima.myproject.model.User;
 import by.nevar.dima.myproject.service.UserService;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class DefaultUserService implements UserService {
@@ -32,7 +33,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public String saveUser(User user) {
+    public String saveUser(User user) throws SQLException {
         return userDao.save(user);
     }
 

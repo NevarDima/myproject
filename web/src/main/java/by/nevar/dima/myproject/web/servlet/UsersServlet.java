@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,19 +23,30 @@ public class UsersServlet extends HttpServlet {
     private UserService userService = DefaultUserService.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest rq, HttpServletResponse rs) {
+    protected void doGet(HttpServletRequest rq, HttpServletResponse rs) throws UnsupportedEncodingException {
+        rs.setCharacterEncoding("UTF-8");
+        rq.setCharacterEncoding("UTF-8");
+        rs.setContentType("txt/html");
         List<User> users = userService.getUser();
         rq.setAttribute("users", users);
         WebUtils.forword("user", rq, rs);
     }
 
     @Override
-    protected void doPost(HttpServletRequest rq, HttpServletResponse rs) {
+    protected void doPost(HttpServletRequest rq, HttpServletResponse rs) throws UnsupportedEncodingException {
+        rs.setCharacterEncoding("UTF-8");
+        rq.setCharacterEncoding("UTF-8");
+        rs.setContentType("txt/html");
         String firstName = rq.getParameter("firstName");
         String lastName = rq.getParameter("lastName");
         String phone = rq.getParameter("phone");
         String email = rq.getParameter("email");
-        String id = userService.saveUser(new User(firstName, lastName, phone, email));
+        String id = null;
+        try {
+            id = userService.saveUser(new User(firstName, lastName, phone, email));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         log.info("user created:{} at {}", id, LocalDateTime.now());
 
         try {

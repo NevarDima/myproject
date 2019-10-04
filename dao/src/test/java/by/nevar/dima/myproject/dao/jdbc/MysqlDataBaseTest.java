@@ -23,7 +23,7 @@ class MysqlDataBaseTest {
         DatabaseMetaData metaData = connection.getMetaData();
         assertEquals("MySQL Connector/J", metaData.getDriverName());
         assertEquals("mysql-connector-java-8.0.17 (Revision: 16a712ddb3f826a1933ab42b0039f7fb9eebc6ec)", metaData.getDriverVersion());
-        assertEquals("jdbc:mysql://localhost:3306/myschema?logger=com.mysql.cj.log.StandardLogger&profileSQL=true",
+        assertEquals("jdbc:mysql://localhost:3306/myschema?useUnicode=true&characterEncoding=UTF-8&logger=com.mysql.cj.log.StandardLogger&profileSQL=true",
                 metaData.getURL());
         assertEquals("root@localhost", metaData.getUserName());
     }
@@ -101,7 +101,7 @@ class MysqlDataBaseTest {
         }
     }
 
-    MysqlDataBase dataBase = new MysqlDataBase();
+    private MysqlDataBase dataBase = new MysqlDataBase();
 
     int findByMoneyGt(int salary) throws SQLException {
         try (Connection connection = dataBase.connect();
