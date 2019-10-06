@@ -28,7 +28,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<User> getUser() {
+    public List<User> getUser() throws SQLException {
         return userDao.getUsers();
     }
 

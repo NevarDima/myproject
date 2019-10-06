@@ -27,7 +27,12 @@ public class UsersServlet extends HttpServlet {
         rs.setCharacterEncoding("UTF-8");
         rq.setCharacterEncoding("UTF-8");
         rs.setContentType("txt/html");
-        List<User> users = userService.getUser();
+        List<User> users = null;
+        try {
+            users = userService.getUser();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         rq.setAttribute("users", users);
         WebUtils.forword("user", rq, rs);
     }

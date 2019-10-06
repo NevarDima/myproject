@@ -19,7 +19,7 @@
             <th>phone</th>
             <th>email</th>
         </tr>
-        <c:forEach items="${users}" var="student">
+        <c:forEach items="${users}" var="user">
             <tr>
                 <td>${user.firstName}</td>
                 <td>${user.lastName}</td>

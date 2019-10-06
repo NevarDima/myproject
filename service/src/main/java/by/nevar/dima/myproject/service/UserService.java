@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface UserService {
-    List<User> getUser();
+    List<User> getUser() throws SQLException;
 
     String saveUser(User user) throws SQLException;
 
