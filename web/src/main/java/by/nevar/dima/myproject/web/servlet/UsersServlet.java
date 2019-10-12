@@ -27,12 +27,7 @@ public class UsersServlet extends HttpServlet {
         rs.setCharacterEncoding("UTF-8");
         rq.setCharacterEncoding("UTF-8");
         rs.setContentType("txt/html");
-        List<User> users = null;
-        try {
-            users = userService.getUser();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        List<User> users = userService.getUsers();
         rq.setAttribute("users", users);
         WebUtils.forword("user", rq, rs);
     }
@@ -42,16 +37,11 @@ public class UsersServlet extends HttpServlet {
         rs.setCharacterEncoding("UTF-8");
         rq.setCharacterEncoding("UTF-8");
         rs.setContentType("txt/html");
-        String firstName = rq.getParameter("firstName");
-        String lastName = rq.getParameter("lastName");
+        String name = rq.getParameter("name");
+        String surname = rq.getParameter("surname");
         String phone = rq.getParameter("phone");
         String email = rq.getParameter("email");
-        String id = null;
-        try {
-            id = userService.saveUser(new User(firstName, lastName, phone, email));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        Long id = userService.saveUser(new User(null, name, surname, phone, email));
         log.info("user created:{} at {}", id, LocalDateTime.now());
 
         try {
