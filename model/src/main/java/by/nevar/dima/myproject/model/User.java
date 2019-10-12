@@ -1,24 +1,25 @@
 package by.nevar.dima.myproject.model;
 
 public class User {
-    private String firstName;
-    private String lastName;
+    private Long id;
+    private String name;
+    private String surname;
     private String phone;
     private String email;
 
-    public User(String firstName, String lastName, String phone, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(Long id, String name, String surname, String phone, String email) {
+        this.name = name;
+        this.surname = surname;
         this.phone = phone;
         this.email = email;
     }
 
     public String getFirstName() {
-        return firstName;
+        return name;
     }
 
     public String getLastName() {
-        return lastName;
+        return surname;
     }
 
     public String getPhone() {
@@ -30,6 +31,6 @@ public class User {
     }
 
     public String getId() {
-        return firstName + "_" + lastName;
+        return name + "_" + surname;
     }
 }

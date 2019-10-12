@@ -1,16 +1,22 @@
 package by.nevar.dima.myproject.model;
 
 public class AuthUser {
+    private Long id;
     private String login;
     private String password;
     private Role role;
-    private String userId;
+    private Long userId;
 
-    public AuthUser(String login, String password, Role role, String userId) {
+    public AuthUser(Long id, String login, String password, Role role, Long userId) {
+        this.id = id;
         this.login = login;
         this.password = password;
         this.role = role;
         this.userId = userId;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getLogin() {
@@ -25,7 +31,7 @@ public class AuthUser {
         return role;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 }

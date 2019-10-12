@@ -1,27 +1,21 @@
 package by.nevar.dima.myproject.service.impl;
 
 import by.nevar.dima.myproject.dao.AuthUserDao;
+import by.nevar.dima.myproject.dao.DataSource;
 import by.nevar.dima.myproject.dao.impl.DefaultAuthUserDao;
 import by.nevar.dima.myproject.model.AuthUser;
 import by.nevar.dima.myproject.service.SecurityService;
 
 public class DefaultSecurityService implements SecurityService {
-    private AuthUserDao authUserDao = DefaultAuthUserDao.getInstance();
 
-    private static volatile SecurityService instance;
-
-    public static SecurityService getInstance() {
-        SecurityService localInstance = instance;
-        if (localInstance == null) {
-            synchronized (SecurityService.class) {
-                localInstance = instance;
-                if (localInstance == null) {
-                    instance = localInstance = new DefaultSecurityService();
-                }
-            }
-        }
-        return localInstance;
+    private static class SingletonHolder {
+        static final SecurityService HOLDER_INSTANCE = new DefaultSecurityService();
     }
+    public static SecurityService getInstance() {
+        return DefaultSecurityService.SingletonHolder.HOLDER_INSTANCE;
+    }
+
+    private AuthUserDao authUserDao = DefaultAuthUserDao.getInstance();
 
     public AuthUser login(String login, String password) {
         AuthUser user = authUserDao.getByLogin(login);
