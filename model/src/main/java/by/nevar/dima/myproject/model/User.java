@@ -8,6 +8,7 @@ public class User {
     private String email;
 
     public User(Long id, String name, String surname, String phone, String email) {
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.phone = phone;
@@ -30,7 +31,7 @@ public class User {
         return email;
     }
 
-    public String getId() {
-        return name + "_" + surname;
+    public Long getId() {
+        return id;
     }
 }

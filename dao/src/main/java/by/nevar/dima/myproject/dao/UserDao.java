@@ -9,4 +9,6 @@ public interface UserDao {
     List<User> getUsers() throws SQLException;
 
     Long save(User user) throws SQLException;
+
+    boolean update (User user);
 }
