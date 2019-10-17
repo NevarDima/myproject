@@ -9,7 +9,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
-<a href="${pageContext.request.contextPath}/logout">logout</a>
+<a href="${pageContext.request.contextPath}/logout">Logout</a>
 <h3>Пользователи</h3>
 <c:if test="${users != null}">
     <table>
@@ -31,7 +31,7 @@
 </c:if>
 
 
-<c:if test="${authUser.role == 'ADMINISTRATOR'}">
+<c:if test="${authUser.roleUser == 'ADMINISTRATOR'}">
     <h3>Добавить пользователя</h3>
     <form action="${pageContext.request.contextPath}/user" method="post">
         <label for="firstName">имя</label>

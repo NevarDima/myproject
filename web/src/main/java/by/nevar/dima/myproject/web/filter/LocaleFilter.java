@@ -1,31 +1,35 @@
 package by.nevar.dima.myproject.web.filter;
 
-import by.nevar.dima.myproject.web.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter(filterName = "AuthFilter")
-public class AuthFilter implements Filter {
+@WebFilter(filterName = "LocaleFilter")
+public class LocaleFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(AuthFilter.class);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
         HttpServletRequest rq = (HttpServletRequest) servletRequest;
-        Object authUser = rq.getSession().getAttribute("authUser");
-        if (authUser == null) {
-            WebUtils.forward("login", rq, ((HttpServletResponse) servletResponse));
+        HttpSession session = rq.getSession();
+
+        String locale = servletRequest.getParameter("locale");
+        if (locale != null) {
+            session.setAttribute("locale", locale);
+        } else if ((session.getAttribute("locale")) == null) {
+            String DEFAULTLOCALE = "en_US";
+            session.setAttribute("locale", DEFAULTLOCALE);
         }
         try {
-            filterChain.doFilter(rq, servletResponse);
+            filterChain.doFilter(servletRequest, servletResponse);
         } catch (IOException | ServletException e) {
-            log.error("AuthFilter error", e);
+            log.error("LocaleFilter error", e);
             e.printStackTrace();
         }
     }

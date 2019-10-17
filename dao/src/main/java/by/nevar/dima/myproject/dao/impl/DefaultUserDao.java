@@ -33,22 +33,23 @@ public class DefaultUserDao implements UserDao {
             while (resultSet.next()) {
                 final User user = new User(
                         resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("surname"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
                         resultSet.getString("email"),
-                        resultSet.getString("phone"));
+                        resultSet.getString("phone"),
+                        resultSet.getLong("auth_id"));
                 result.add(user);
             }
             return result;
         } catch (SQLException e) {
-            log.error("SQLException at: {}", LocalDateTime.now(), e);
+            log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Long save(User user) {
-        final String sql = "insert into user(name, surname, phone, email) values(?,?,?,?)";
+    public long saveUser(User user) {
+        final String sql = "insert into user(first_name, last_name, phone, email) values(?,?,?,?)";
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getFirstName());
@@ -61,22 +62,24 @@ public class DefaultUserDao implements UserDao {
                 return keys.getLong(1);
             }
         } catch (SQLException e) {
-            log.error("SQLException at: {}", LocalDateTime.now(), e);
+            log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public boolean update(User user) {
+    public boolean updateUser(User user) {
         try (Connection connection = DataSource.getInstance().getConnection();
-             PreparedStatement ps = connection.prepareStatement("update user set name = ?, surname = ?, phone = ?, email = ? where id = ?")) {
-            ps.setString(1, user.getFirstName());
-            ps.setString(2, user.getLastName());
-            ps.setString(3, user.getPhone());
-            ps.setString(4, user.getEmail());
-            return ps.executeUpdate()>0;
+             PreparedStatement statement = connection.prepareStatement
+                     ("update user set first_name = ?, last_name = ?, email = ?, phone = ? where auth_id = ?")) {
+            statement.setString(1, user.getFirstName());
+            statement.setString(2, user.getLastName());
+            statement.setString(3, user.getEmail());
+            statement.setString(4, user.getPhone());
+            log.info("User auth_id - {} updated : {}", user.getAuthId(), LocalDateTime.now());
+            return statement.executeUpdate()>0;
         } catch (SQLException e) {
-            log.error("SQLException at: {}", LocalDateTime.now(), e);
+            log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
     }

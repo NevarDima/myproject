@@ -7,16 +7,24 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 public class WebUtils {
     private static final Logger log = LoggerFactory.getLogger(WebUtils.class);
 
-    public static void forword(String page, HttpServletRequest rq, HttpServletResponse rs) {
+    public static void forward(String page, HttpServletRequest rq, HttpServletResponse rs) {
         try {
             rq.getRequestDispatcher("/" + page + ".jsp").forward(rq, rs);
         } catch (ServletException | IOException e) {
+            log.error("Error in forward method, page - {}", page, e);
             throw new RuntimeException(e);
         }
 
+    }
+
+    public static void utf(HttpServletRequest rq, HttpServletResponse rs) throws UnsupportedEncodingException {
+        rs.setCharacterEncoding("UTF-8");
+        rq.setCharacterEncoding("UTF-8");
+        rs.setContentType("txt/html");
     }
 }

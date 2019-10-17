@@ -1,26 +1,39 @@
 package by.nevar.dima.myproject.model;
 
 public class User {
-    private Long id;
-    private String name;
-    private String surname;
+    private long id;
+    private String firstName;
+    private String lastName;
     private String phone;
     private String email;
+    private long authId;
 
-    public User(Long id, String name, String surname, String phone, String email) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
+    public User(String firstName, String lastName, String phone, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
         this.email = email;
     }
 
+    public User(long id, String firstName, String lastName, String phone, String email, long authId) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.email = email;
+        this.authId = authId;
+    }
+
+    public long getId(){
+        return id;
+    }
+
     public String getFirstName() {
-        return name;
+        return firstName;
     }
 
     public String getLastName() {
-        return surname;
+        return lastName;
     }
 
     public String getPhone() {
@@ -31,7 +44,7 @@ public class User {
         return email;
     }
 
-    public Long getId() {
-        return id;
+    public long getAuthId() {
+        return authId;
     }
 }

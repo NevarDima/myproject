@@ -2,13 +2,12 @@ package by.nevar.dima.myproject.dao;
 
 import by.nevar.dima.myproject.model.User;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface UserDao {
-    List<User> getUsers() throws SQLException;
+    List<User> getUsers();
 
-    Long save(User user) throws SQLException;
+    long saveUser(User user);
 
-    boolean update (User user);
+    boolean updateUser(User user);
 }

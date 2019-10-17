@@ -14,14 +14,32 @@
 <body>
 <!-- header -->
 <div>
-    <h1>Super app!</h1>
+    <h1>Rentalcars.by</h1>
 </div>
 
 <div>       <!-- content -->
     <div>    <!-- buttons holder -->
         <button onclick="location.href='/login'">Login</button>
-        <button onclick="location.href='/user'">List of users</button>
+        <button onclick="location.href='/registration'">Registration</button>
     </div>
 </div>
 </body>
-</html>
+<h3>Автомобили</h3>
+<c:if test="${car != null}">
+    <table>
+        <tr>
+            <th>Бренд</th>
+            <th>Модель</th>
+            <th>Тип кузова</th>
+            <th>Доступна</th>
+        </tr>
+        <c:forEach items="${car}" var="car">
+            <tr>
+                <td>${car.brend}</td>
+                <td>${car.model}</td>
+                <td>${car.roleUser}</td>
+                <td>${car.blocked}</td>
+            </tr>
+        </c:forEach>
+    </table>
+</c:if>

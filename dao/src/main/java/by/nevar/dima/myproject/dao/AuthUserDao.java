@@ -5,9 +5,11 @@ import by.nevar.dima.myproject.model.AuthUser;
 public interface AuthUserDao {
     AuthUser getByLogin(String login);
 
-    long saveAuthUser(AuthUser user);
+    AuthUser getById(long id);
 
-    boolean update(AuthUser user);
+    AuthUser saveAuthUser(AuthUser user);
 
-    boolean delete(AuthUser user);
+    boolean updateAuthUser(AuthUser user);
+
+    boolean deleteAuthUser(long id);
 }

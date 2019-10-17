@@ -1,6 +1,6 @@
 package by.nevar.dima.myproject.model;
 
-public enum Role {
+public enum RoleUser {
     USER,
     ADMINISTRATOR;
 }
