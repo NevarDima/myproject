@@ -18,7 +18,9 @@ import java.util.List;
 
 @WebServlet(name = "UsersServlet", urlPatterns = "/user")
 public class UsersServlet extends HttpServlet {
+
     private static final Logger log = LoggerFactory.getLogger(UsersServlet.class);
+
     private UserService userService = DefaultUserService.getInstance();
 
     @Override

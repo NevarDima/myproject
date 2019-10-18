@@ -1,11 +1,8 @@
 package by.nevar.dima.myproject.web.servlet;
 
 import by.nevar.dima.myproject.model.AuthUser;
-import by.nevar.dima.myproject.model.User;
 import by.nevar.dima.myproject.service.SecurityService;
-import by.nevar.dima.myproject.service.UserService;
 import by.nevar.dima.myproject.service.impl.DefaultSecurityService;
-import by.nevar.dima.myproject.service.impl.DefaultUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +39,10 @@ public class RegistrationServlet extends HttpServlet {
             doGet(rq, rs);
             return;
         }
+        rq.getSession().setAttribute("authUser",authUser);
         log.info("User - {} registered : {}", login, LocalDateTime.now());
         try {
-            rs.sendRedirect(rq.getContextPath() + "/index.jsp");
+            rs.sendRedirect(rq.getContextPath() + "/index");
         } catch (IOException e) {
             log.error("Failed to redirect to main page : {}", LocalDateTime.now());
             throw new RuntimeException();

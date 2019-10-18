@@ -25,7 +25,7 @@
 </div>
 </body>
 <h3>Автомобили</h3>
-<c:if test="${car != null}">
+<c:if test="${cars != null}">
     <table>
         <tr>
             <th>Бренд</th>
@@ -33,7 +33,7 @@
             <th>Тип кузова</th>
             <th>Доступна</th>
         </tr>
-        <c:forEach items="${car}" var="car">
+        <c:forEach items="${cars}" var="car">
             <tr>
                 <td>${car.brend}</td>
                 <td>${car.model}</td>
