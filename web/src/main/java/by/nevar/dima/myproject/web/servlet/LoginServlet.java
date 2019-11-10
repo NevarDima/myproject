@@ -43,6 +43,7 @@ public class LoginServlet extends HttpServlet {
             rq.setAttribute("error", "login or password invalid");
             log.info("Login - {} or password is invalid : {}", login, LocalDateTime.now());
             WebUtils.forward("login", rq, rs);
+            return;
         }
         rq.getSession().setAttribute("authUser", user);
         log.info("User - {} logged in : {}", login, LocalDateTime.now());

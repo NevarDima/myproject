@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,16 +22,14 @@ public class CarsServlet extends HttpServlet {
     private CarService carService = DefaultCarService.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest rq, HttpServletResponse rs) throws UnsupportedEncodingException {
-        WebUtils.utf(rq, rs);
+    protected void doGet(HttpServletRequest rq, HttpServletResponse rs){
         List<Car> cars = carService.getAllCars();
         rq.setAttribute("cars", cars);
         WebUtils.forward("index", rq, rs);
     }
 
     @Override
-    protected void doPost(HttpServletRequest rq, HttpServletResponse rs) throws UnsupportedEncodingException {
-        WebUtils.utf(rq, rs);
+    protected void doPost(HttpServletRequest rq, HttpServletResponse rs){
         String brand = rq.getParameter("brand");
         String model = rq.getParameter("model");
         RoleCar roleCar = RoleCar.valueOf(rq.getParameter("role_car"));

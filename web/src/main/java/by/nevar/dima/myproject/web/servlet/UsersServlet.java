@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,16 +23,14 @@ public class UsersServlet extends HttpServlet {
     private UserService userService = DefaultUserService.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest rq, HttpServletResponse rs) throws UnsupportedEncodingException {
-        WebUtils.utf(rq, rs);
+    protected void doGet(HttpServletRequest rq, HttpServletResponse rs){
         List<User> users = userService.getUsers();
         rq.setAttribute("users", users);
         WebUtils.forward("user", rq, rs);
     }
 
     @Override
-    protected void doPost(HttpServletRequest rq, HttpServletResponse rs) throws UnsupportedEncodingException {
-        WebUtils.utf(rq, rs);
+    protected void doPost(HttpServletRequest rq, HttpServletResponse rs){
         String firstName = rq.getParameter("first_name");
         String lastName = rq.getParameter("last_name");
         String phone = rq.getParameter("phone");

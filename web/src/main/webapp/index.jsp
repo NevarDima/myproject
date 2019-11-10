@@ -35,10 +35,10 @@
         </tr>
         <c:forEach items="${cars}" var="car">
             <tr>
-                <td>${car.brend}</td>
+                <td>${car.brand}</td>
                 <td>${car.model}</td>
-                <td>${car.roleUser}</td>
-                <td>${car.blocked}</td>
+                <td>${car.roleCar}</td>
+                <td>${car.isBlocked}</td>
             </tr>
         </c:forEach>
     </table>

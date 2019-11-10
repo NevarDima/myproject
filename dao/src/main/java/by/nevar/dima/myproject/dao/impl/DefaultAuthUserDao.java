@@ -78,6 +78,7 @@ public class DefaultAuthUserDao implements AuthUserDao {
                      ("insert into user (auth_id) values (?)")) {
             statementAuthUser.setString(1, user.getLogin());
             statementAuthUser.setString(2, user.getPassword());
+            statementAuthUser.executeUpdate();
             long id;
             try (ResultSet generatedKeys = statementAuthUser.getGeneratedKeys()) {
                 if(generatedKeys.next()){

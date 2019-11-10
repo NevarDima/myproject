@@ -21,10 +21,4 @@ public class WebUtils {
         }
 
     }
-
-    public static void utf(HttpServletRequest rq, HttpServletResponse rs) throws UnsupportedEncodingException {
-        rs.setCharacterEncoding("UTF-8");
-        rq.setCharacterEncoding("UTF-8");
-        rs.setContentType("txt/html");
-    }
 }

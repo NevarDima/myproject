@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter(filterName = "AdminFilter")
+@WebFilter(urlPatterns = "/**")
 public class AdminFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(AuthFilter.class);
@@ -23,6 +23,7 @@ public class AdminFilter implements Filter {
         Object authUser = rq.getSession().getAttribute("authUser");
         if (((AuthUser)authUser).getRoleUser().equals(RoleUser.ADMINISTRATOR)) {
             WebUtils.forward("index", rq, ((HttpServletResponse) servletResponse));
+            return;
         }
         try {
             filterChain.doFilter(rq, servletResponse);
