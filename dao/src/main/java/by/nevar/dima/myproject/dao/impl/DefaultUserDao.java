@@ -1,8 +1,12 @@
 package by.nevar.dima.myproject.dao.impl;
 
 import by.nevar.dima.myproject.dao.DataSource;
+import by.nevar.dima.myproject.dao.HibernateUtil;
 import by.nevar.dima.myproject.dao.UserDao;
+import by.nevar.dima.myproject.dao.converter.UserConverter;
+import by.nevar.dima.myproject.dao.entity.UserEntity;
 import by.nevar.dima.myproject.model.User;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +14,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultUserDao implements UserDao {
 
@@ -26,6 +31,7 @@ public class DefaultUserDao implements UserDao {
 
     @Override
     public List<User> getUsers() {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement("select * from user");
              ResultSet resultSet = statement.executeQuery()) {
@@ -45,10 +51,18 @@ public class DefaultUserDao implements UserDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        final List<UserEntity> authUser = HibernateUtil.getSession().createQuery("from UserEntity")
+                .list();
+        return authUser.stream()
+                .map(UserConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public long saveUser(User user) {
+/* JDBC realisation
         final String sql = "insert into user(first_name, last_name, phone, email) values(?,?,?,?)";
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -65,10 +79,19 @@ public class DefaultUserDao implements UserDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        UserEntity userEntity = UserConverter.toEntity(user);
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.save(userEntity);
+        session.getTransaction().commit();
+        return userEntity.getId();
     }
 
     @Override
     public boolean updateUser(User user) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement
                      ("update user set first_name = ?, last_name = ?, email = ?, phone = ? where auth_id = ?")) {
@@ -82,5 +105,14 @@ public class DefaultUserDao implements UserDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        UserEntity userEntity = UserConverter.toEntity(user);
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.update(userEntity);
+        session.getTransaction().commit();
+        return true; //TODO change return type
     }
+
 }

@@ -2,11 +2,16 @@ package by.nevar.dima.myproject.dao.impl;
 
 import by.nevar.dima.myproject.dao.AuthUserDao;
 import by.nevar.dima.myproject.dao.DataSource;
+import by.nevar.dima.myproject.dao.HibernateUtil;
+import by.nevar.dima.myproject.dao.converter.AuthUserConverter;
+import by.nevar.dima.myproject.dao.entity.AuthUserEntity;
 import by.nevar.dima.myproject.model.AuthUser;
 import by.nevar.dima.myproject.model.RoleUser;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.NoResultException;
 import java.sql.*;
 import java.time.LocalDateTime;
 
@@ -25,6 +30,7 @@ public class DefaultAuthUserDao implements AuthUserDao {
 
     @Override
     public AuthUser getByLogin(String login) {
+ /*  JDBC realisation
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("select * from auth_user where login = ?")) {
                 statement.setString(1,login);
@@ -44,10 +50,23 @@ public class DefaultAuthUserDao implements AuthUserDao {
             log.error("SQLException at: {}", LocalDateTime.now(), e);
             throw new RuntimeException();
         }
+*/
+
+        AuthUserEntity authUser;
+        try{
+            authUser = (AuthUserEntity) HibernateUtil.getSession().createQuery("from AuthUserEntity au where au.login = :login")
+                    .setParameter("login", login)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            log.error("user not find by login: {}", login);
+            authUser = null;
+        }
+        return AuthUserConverter.fromEntity(authUser);
     }
 
     @Override
     public AuthUser getById(long id) {
+/* JDBC realisation
         try(Connection connection = DataSource.getInstance().getConnection();
             PreparedStatement statement = connection.prepareStatement("select * from auth_user where id = ?")) {
             statement.setLong(1, id);
@@ -67,10 +86,23 @@ public class DefaultAuthUserDao implements AuthUserDao {
             log.error("SQLException at: {}", LocalDateTime.now(), e);
             throw new RuntimeException();
         }
+ */
+
+        AuthUserEntity authUser;
+        try{
+            authUser = (AuthUserEntity) HibernateUtil.getSession().createQuery("from AuthUserEntity au where au.id = :id")
+                    .setParameter("id", id)
+                    .getSingleResult();
+        }catch (NoResultException e){
+            log.error("user not find by id: {}", id);
+            authUser = null;
+        }
+        return AuthUserConverter.fromEntity(authUser);
     }
 
     @Override
     public AuthUser saveAuthUser(AuthUser user) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statementAuthUser = connection.prepareStatement
                      ("insert into auth_user(login, password) values(?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -95,10 +127,19 @@ public class DefaultAuthUserDao implements AuthUserDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        AuthUserEntity authUserEntity = AuthUserConverter.toEntity(user);
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.save(authUserEntity);
+        session.getTransaction().commit();
+        return AuthUserConverter.fromEntity(authUserEntity);
     }
 
     @Override
     public boolean updateAuthUser(AuthUser user) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement
                      ("update auth_user set login = ?, password = ?, role_user = ? where id = ?")) {
@@ -112,10 +153,19 @@ public class DefaultAuthUserDao implements AuthUserDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        AuthUserEntity authUserEntity = AuthUserConverter.toEntity(user);
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.update(authUserEntity);
+        session.getTransaction().commit();
+        return true; //TODO change return type
     }
 
     @Override
     public boolean deleteAuthUser(long id) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statementAuthUser = connection.prepareStatement
                      ("delete from auth_user where id = ?");
@@ -131,5 +181,13 @@ public class DefaultAuthUserDao implements AuthUserDao {
             log.error("SQLException at: {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.createQuery("delete AuthUserEntity where id = :id").executeUpdate();
+        session.getTransaction().commit();
+
+        return true; //TODO change return type
     }
 }

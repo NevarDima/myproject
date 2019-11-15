@@ -2,8 +2,13 @@ package by.nevar.dima.myproject.dao.impl;
 
 import by.nevar.dima.myproject.dao.CarDao;
 import by.nevar.dima.myproject.dao.DataSource;
+import by.nevar.dima.myproject.dao.HibernateUtil;
+import by.nevar.dima.myproject.dao.converter.AuthUserConverter;
+import by.nevar.dima.myproject.dao.converter.CarConverter;
+import by.nevar.dima.myproject.dao.entity.CarEntity;
 import by.nevar.dima.myproject.model.Car;
 import by.nevar.dima.myproject.model.RoleCar;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +16,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DefaultCarDao implements CarDao {
 
@@ -26,6 +32,7 @@ public class DefaultCarDao implements CarDao {
 
     @Override
     public Car saveCar(Car car) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement
                      ("insert into car(brand, model, role_car) values(?,?,?)")) {
@@ -47,10 +54,19 @@ public class DefaultCarDao implements CarDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        CarEntity carEntity = CarConverter.toEntity(car);
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.save(carEntity);
+        session.getTransaction().commit();
+        return CarConverter.fromEntity(carEntity);
     }
 
     @Override
     public boolean updateCar(Car car) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement
                      ("update car set brand = ?, model = ?, role_car = ? where id = ?")) {
@@ -64,10 +80,19 @@ public class DefaultCarDao implements CarDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        CarEntity carEntity = CarConverter.toEntity(car);
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.update(carEntity);
+        session.getTransaction().commit();
+        return true; //TODO change return type
     }
 
     @Override
     public boolean deleteCar(long id) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement
                      ("delete from car where id = ?")) {
@@ -78,10 +103,19 @@ public class DefaultCarDao implements CarDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        final Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        session.createQuery("delete CarEntity where id = :id").executeUpdate();
+        session.getTransaction().commit();
+
+        return true; //TODO change return type
     }
 
     @Override
     public List<Car> getAllCars(){
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement("select * from car order by id desc limit 10");
              ResultSet resultSet = statement.executeQuery()) {
@@ -90,10 +124,18 @@ public class DefaultCarDao implements CarDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        final List<CarEntity> car = HibernateUtil.getSession().createQuery("from CarEntity")
+                .list();
+        return car.stream()
+                .map(CarConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Car> getByBrand(String brand) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement("select * from car where brand = ? order by id desc limit 10");
              ResultSet resultSet = statement.executeQuery()) {
@@ -103,10 +145,18 @@ public class DefaultCarDao implements CarDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        final List<CarEntity> car = HibernateUtil.getSession().createQuery("from CarEntity where brand = :brand")
+                .list();
+        return car.stream()
+                .map(CarConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Car> getByModel(String model) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement("select * from car where model = ? order by id desc limit 10");
              ResultSet resultSet = statement.executeQuery()) {
@@ -116,10 +166,18 @@ public class DefaultCarDao implements CarDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
+ */
+
+        final List<CarEntity> car = HibernateUtil.getSession().createQuery("from CarEntity where model = :model")
+                .list();
+        return car.stream()
+                .map(CarConverter::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Car> getByRoleCar(RoleCar role) {
+/* JDBC realisation
         try (Connection connection = DataSource.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement("select * from car where role_car = ? order by id desc limit 10");
              ResultSet resultSet = statement.executeQuery()) {
@@ -129,8 +187,15 @@ public class DefaultCarDao implements CarDao {
             log.error("SQLException : {}", LocalDateTime.now(), e);
             throw new RuntimeException(e);
         }
-    }
+ */
 
+        final List<CarEntity> car = HibernateUtil.getSession().createQuery("from CarEntity where roleCar = :role")
+                .list();
+        return car.stream()
+                .map(CarConverter::fromEntity)
+                .collect(Collectors.toList());
+    }
+/* JDBC realisation
     private List<Car> getList(ResultSet resultSet) throws SQLException {
         final ArrayList<Car> result = new ArrayList<>();
         while (resultSet.next()) {
@@ -144,4 +209,6 @@ public class DefaultCarDao implements CarDao {
         }
         return result;
     }
+ */
+
 }
